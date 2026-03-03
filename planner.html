@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIU Student Manager - Planner</title>
+    <style>
+        :root {
+            --bg: #0b1015;
+            --bg-soft: #111a24;
+            --panel: #121f2c;
+            --card: #162535;
+            --card-2: #1b2e42;
+            --text: #f4f7fb;
+            --text-dim: #9fb3c8;
+            --line: #26384a;
+            --accent: #26a69a;
+            --accent-2: #ff7a45;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --sidebar-bg: #1a1518;
+            --accent-burgundy: #4a1d2e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at 20% 0%, #132435 0%, #0b1015 42%);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            padding: 20px 10px;
+            border-right: 1px solid #2d2d2d;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .nav-header {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-burgundy);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #ff4d8d;
+            margin: 20px 0 10px 10px;
+            letter-spacing: 1px;
+        }
+
+        .menu { list-style: none; padding: 0; margin: 0; }
+        .menu li a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .menu li a:hover { background: rgba(255, 255, 255, 0.06); }
+        .icon { margin-right: 12px; width: 20px; text-align: center; font-size: 16px; }
+
+        .todo-box { margin-top: 30px; padding: 0 10px; }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .todo-item input { margin-right: 10px; accent-color: var(--accent); }
+        .todo-item span { flex-grow: 1; }
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 5px;
+            line-height: 1;
+            display: none;
+        }
+        .todo-item:hover .del-btn { display: block; color: #ff4d4d; }
+
+        .main {
+            flex: 1;
+            padding: 28px 34px 38px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #173149 0%, #1f3449 52%, #29303c 100%);
+            border: 1px solid #31485f;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: 0.3px;
+        }
+
+        .hero p {
+            margin: 6px 0 0;
+            color: #d6e0ea;
+            font-size: 13px;
+        }
+
+        .hero-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chip {
+            border: 1px solid #49637b;
+            background: rgba(4, 10, 16, 0.35);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #d5e6f7;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .metric {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .metric .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .metric .value {
+            margin-top: 5px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.45fr 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #b8c9dc;
+        }
+
+        .time-grid {
+            display: grid;
+            gap: 8px;
+            max-height: 560px;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .slot {
+            display: grid;
+            grid-template-columns: 64px 1fr;
+            gap: 8px;
+            align-items: center;
+            background: rgba(2, 9, 17, 0.35);
+            border: 1px solid #23394b;
+            border-radius: 9px;
+            padding: 8px;
+        }
+
+        .slot .time {
+            font-size: 12px;
+            color: #8ea3b8;
+        }
+
+        .slot input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        .priority-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .priority-item input {
+            flex: 1;
+            background: #0f1924;
+            border: 1px solid #254055;
+            color: var(--text);
+            border-radius: 8px;
+            padding: 9px 10px;
+        }
+
+        .mini-btn {
+            border: 1px solid #3a5368;
+            background: #112130;
+            color: var(--text);
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .mini-btn:hover { border-color: #4f6d85; }
+        .mini-btn.accent { border-color: #2d7a76; background: #173833; }
+        .mini-btn.warn { border-color: #8f3a3a; background: #3b1f1f; }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .matrix-box {
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .box-1 { background: linear-gradient(120deg, #4b2733, #392028); }
+        .box-2 { background: linear-gradient(120deg, #3f2f1e, #2b251d); }
+        .box-3 { background: linear-gradient(120deg, #25374c, #1d2c3e); }
+        .box-4 { background: linear-gradient(120deg, #28302f, #212826); }
+
+        .matrix-box h4 {
+            margin: 0 0 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .matrix-box textarea {
+            width: 100%;
+            height: 72px;
+            resize: vertical;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text);
+            border-radius: 7px;
+            padding: 8px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .water-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .water-track { display: flex; gap: 7px; }
+
+        .drop {
+            width: 23px;
+            height: 23px;
+            border-radius: 999px;
+            border: 1px solid #365069;
+            background: #132334;
+            cursor: pointer;
+        }
+
+        .drop.filled {
+            background: linear-gradient(120deg, #3ab6ca, #1e8c99);
+            border-color: #3ab6ca;
+        }
+
+        .list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .item {
+            border: 1px solid #294159;
+            background: #102030;
+            border-radius: 9px;
+            padding: 9px 10px;
+            font-size: 13px;
+        }
+
+        .item .meta {
+            font-size: 12px;
+            color: #98aec5;
+            margin-top: 4px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .save-btn {
+            width: 100%;
+            border: 1px solid #3b6b67;
+            background: linear-gradient(120deg, #1e5f5a, #26766f);
+            color: #fff;
+            border-radius: 9px;
+            padding: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .ghost-btn {
+            width: 100%;
+            border: 1px solid #4b5968;
+            background: #1a2736;
+            color: #eaf0f7;
+            border-radius: 9px;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 1150px) {
+            .layout { grid-template-columns: 1fr; }
+            .metrics { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+        }
+
+        @media (max-width: 900px) {
+            body { display: block; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid #2d2d2d;
+            }
+            .main { padding: 18px; }
+            .hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="nav-header">
+            <a href="index.html" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <span>🎓</span> <span>DIU Student Manager</span>
+            </a>
+        </div>
+        <h4>Navigation</h4>
+        <ul class="menu">
+            <li><a href="exams and study.html"><span class="icon">📚</span> Exams and Study</a></li>
+            <li><a href="courses.html"><span class="icon">📕</span> Courses</a></li>
+            <li><a href="habit.html"><span class="icon">📅</span> Habit tracker</a></li>
+            <li><a href="hacking.html"><span class="icon" style="color:#ff4d8d">/&gt;</span> Hacking</a></li>
+            <li><a href="goals.html"><span class="icon">🎯</span> Goals</a></li>
+            <li><a href="planner.html"><span class="icon">🥪</span> Planner</a></li>
+            <li><a href="morning.html"><span class="icon">😀</span> Morning Routine</a></li>
+            <li><a href="night.html"><span class="icon">🌚</span> Night Routine</a></li>
+            <li><a href="allclasses.html"><span class="icon">田</span> All Classes</a></li>
+            <li><a href="assignments.html"><span class="icon">田</span> Assignments</a></li>
+            <li><a href="friday.html"><span class="icon">団</span> View of Friday</a></li>
+        </ul>
+        <div class="todo-box">
+            <h4>To Do List:</h4>
+            <div style="display: flex; gap: 5px; margin-bottom: 15px;">
+                <input type="text" id="todoInput" placeholder="New task..." style="flex-grow: 1; background: #2d2d2d; border: 1px solid #3a3a3a; color: white; padding: 5px; border-radius: 4px; font-size: 12px;">
+                <button onclick="addTodo()" style="background: var(--accent); border: none; color: white; border-radius: 4px; padding: 0 10px; cursor: pointer; font-weight: bold;">+</button>
+            </div>
+            <div id="todoList">
+                <div class="todo-item"><input type="checkbox"> <span>Daily Class</span> <button class="del-btn" onclick="this.parentElement.remove()">×</button></div>
+                <div class="todo-item"><input type="checkbox"> <span>Assignment</span> <button class="del-btn" onclick="this.parentElement.remove()">×</button></div>
+                <div class="todo-item"><input type="checkbox"> <span>Python Course</span> <button class="del-btn" onclick="this.parentElement.remove()">×</button></div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <section class="hero">
+            <div>
+                <h1>Strategic Planner</h1>
+                <p id="todayLabel">Plan your day with live data from Assignments, Classes and Habit Tracker.</p>
+            </div>
+            <div class="hero-right">
+                <span class="chip" id="autoSaveChip">Auto Save: ON</span>
+                <span class="chip" id="savedAtChip">Saved: --</span>
+            </div>
+        </section>
+
+        <section class="metrics">
+            <div class="metric">
+                <div class="label">Pending Assignments</div>
+                <div class="value" id="metricAssignments">0</div>
+            </div>
+            <div class="metric">
+                <div class="label">Total Classes</div>
+                <div class="value" id="metricClasses">0</div>
+            </div>
+            <div class="metric">
+                <div class="label">Habit Completion (7d)</div>
+                <div class="value" id="metricHabit">0%</div>
+            </div>
+            <div class="metric">
+                <div class="label">Planner Completion</div>
+                <div class="value" id="metricPlanner">0%</div>
+            </div>
+        </section>
+
+        <section class="layout">
+            <section>
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Time Blocks</h3>
+                        <button class="mini-btn" onclick="fillQuickFocus()">Quick Focus Fill</button>
+                    </div>
+                    <div id="timeline" class="time-grid"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Upcoming Assignment Radar</h3>
+                        <button class="mini-btn" onclick="location.href='assignments.html'">Open Assignments</button>
+                    </div>
+                    <div id="assignmentRadar" class="list"></div>
+                </div>
+            </section>
+
+            <section>
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Top 3 Priorities</h3>
+                        <button class="mini-btn accent" onclick="clearPriorities()">Clear</button>
+                    </div>
+                    <div class="priority-item"><input id="priority_1" placeholder="Priority 1"></div>
+                    <div class="priority-item"><input id="priority_2" placeholder="Priority 2"></div>
+                    <div class="priority-item"><input id="priority_3" placeholder="Priority 3"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Decision Matrix</h3>
+                    </div>
+                    <div class="matrix">
+                        <div class="matrix-box box-1">
+                            <h4>Do First</h4>
+                            <textarea id="mx_do" placeholder="Urgent + Important"></textarea>
+                        </div>
+                        <div class="matrix-box box-2">
+                            <h4>Schedule</h4>
+                            <textarea id="mx_schedule" placeholder="Important, not urgent"></textarea>
+                        </div>
+                        <div class="matrix-box box-3">
+                            <h4>Delegate</h4>
+                            <textarea id="mx_delegate" placeholder="Can be handed off"></textarea>
+                        </div>
+                        <div class="matrix-box box-4">
+                            <h4>Drop</h4>
+                            <textarea id="mx_drop" placeholder="Not worth your time"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Hydration + Habit Pulse</h3>
+                    </div>
+                    <div class="water-wrap">
+                        <div class="water-track" id="waterTrack"></div>
+                        <div class="chip" id="waterLabel">0 / 8</div>
+                    </div>
+                    <div style="margin-top:10px; color: var(--text-dim); font-size:13px;" id="habitPulseText">No data yet</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3 class="card-title">Actions</h3>
+                    </div>
+                    <div class="actions">
+                        <button class="mini-btn warn" style="flex:1;" onclick="resetPlanner()">Reset Planner</button>
+                        <button class="mini-btn" style="flex:1;" onclick="location.href='index.html'">Go Dashboard</button>
+                    </div>
+                    <button class="save-btn" onclick="savePlanner(true)">Save Planner</button>
+                    <button class="ghost-btn" onclick="toggleAutoSave()">Toggle Auto Save</button>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const PLANNER_KEY = "diu_planner_v2";
+        const ASSIGNMENT_KEY = "assignment_system_v2";
+        const CLASS_KEY = "diu_classes";
+        const HABIT_KEY = "diu_habit_tracker_final";
+
+        const state = {
+            autoSave: true,
+            schedule: {},
+            priorities: ["", "", ""],
+            matrix: { do: "", schedule: "", delegate: "", drop: "" },
+            water: [false, false, false, false, false, false, false, false],
+            updatedAt: ""
+        };
+
+        function nowText() {
+            return new Date().toLocaleString();
+        }
+
+        function formatHour(hour) {
+            const h = hour % 12 === 0 ? 12 : hour % 12;
+            const ampm = hour < 12 ? "AM" : "PM";
+            return h + ":00 " + ampm;
+        }
+
+        function buildTimeline() {
+            const wrap = document.getElementById("timeline");
+            wrap.innerHTML = "";
+            for (let h = 6; h <= 23; h++) {
+                const row = document.createElement("div");
+                row.className = "slot";
+                row.innerHTML = `
+                    <div class="time">${formatHour(h)}</div>
+                    <input type="text" id="slot_${h}" placeholder="What will you do here?">
+                `;
+                wrap.appendChild(row);
+            }
+        }
+
+        function buildWater() {
+            const host = document.getElementById("waterTrack");
+            host.innerHTML = "";
+            for (let i = 0; i < 8; i++) {
+                const dot = document.createElement("div");
+                dot.className = "drop";
+                if (state.water[i]) dot.classList.add("filled");
+                dot.addEventListener("click", function () {
+                    state.water[i] = !state.water[i];
+                    dot.classList.toggle("filled");
+                    updateWaterLabel();
+                    maybeAutoSave();
+                });
+                host.appendChild(dot);
+            }
+            updateWaterLabel();
+        }
+
+        function updateWaterLabel() {
+            const done = state.water.filter(Boolean).length;
+            document.getElementById("waterLabel").textContent = done + " / 8";
+        }
+
+        function loadPlanner() {
+            const saved = JSON.parse(localStorage.getItem(PLANNER_KEY) || "null");
+            if (!saved) return;
+            state.autoSave = typeof saved.autoSave === "boolean" ? saved.autoSave : true;
+            state.schedule = saved.schedule || {};
+            state.priorities = Array.isArray(saved.priorities) ? saved.priorities.slice(0, 3) : ["", "", ""];
+            state.matrix = saved.matrix || state.matrix;
+            state.water = Array.isArray(saved.water) ? saved.water.slice(0, 8) : state.water;
+            state.updatedAt = saved.updatedAt || "";
+        }
+
+        function savePlanner(showAlert) {
+            for (let h = 6; h <= 23; h++) {
+                const input = document.getElementById("slot_" + h);
+                state.schedule[h] = input ? input.value : "";
+            }
+            state.priorities = [
+                document.getElementById("priority_1").value,
+                document.getElementById("priority_2").value,
+                document.getElementById("priority_3").value
+            ];
+            state.matrix = {
+                do: document.getElementById("mx_do").value,
+                schedule: document.getElementById("mx_schedule").value,
+                delegate: document.getElementById("mx_delegate").value,
+                drop: document.getElementById("mx_drop").value
+            };
+            state.updatedAt = nowText();
+            localStorage.setItem(PLANNER_KEY, JSON.stringify(state));
+            renderSaveStatus();
+            renderPlannerMetric();
+            if (showAlert) alert("Planner saved.");
+        }
+
+        function maybeAutoSave() {
+            if (state.autoSave) savePlanner(false);
+        }
+
+        function applyPlannerToUI() {
+            for (let h = 6; h <= 23; h++) {
+                const input = document.getElementById("slot_" + h);
+                if (input) input.value = state.schedule[h] || "";
+            }
+            document.getElementById("priority_1").value = state.priorities[0] || "";
+            document.getElementById("priority_2").value = state.priorities[1] || "";
+            document.getElementById("priority_3").value = state.priorities[2] || "";
+            document.getElementById("mx_do").value = state.matrix.do || "";
+            document.getElementById("mx_schedule").value = state.matrix.schedule || "";
+            document.getElementById("mx_delegate").value = state.matrix.delegate || "";
+            document.getElementById("mx_drop").value = state.matrix.drop || "";
+            buildWater();
+            renderSaveStatus();
+            bindAutoSaveInputs();
+        }
+
+        function bindAutoSaveInputs() {
+            document.querySelectorAll("input, textarea").forEach(el => {
+                if (el.id === "todoInput") return;
+                el.addEventListener("input", maybeAutoSave);
+            });
+        }
+
+        function renderSaveStatus() {
+            document.getElementById("autoSaveChip").textContent = "Auto Save: " + (state.autoSave ? "ON" : "OFF");
+            document.getElementById("savedAtChip").textContent = "Saved: " + (state.updatedAt || "--");
+        }
+
+        function toggleAutoSave() {
+            state.autoSave = !state.autoSave;
+            savePlanner(false);
+        }
+
+        function clearPriorities() {
+            document.getElementById("priority_1").value = "";
+            document.getElementById("priority_2").value = "";
+            document.getElementById("priority_3").value = "";
+            maybeAutoSave();
+        }
+
+        function fillQuickFocus() {
+            const items = [
+                "Deep Work: Programming Practice",
+                "Assignment Block",
+                "Revision + Notes",
+                "Break / Walk",
+                "Habit Check-in",
+                "Next Day Planning"
+            ];
+            let idx = 0;
+            for (let h = 8; h <= 18; h += 2) {
+                const input = document.getElementById("slot_" + h);
+                if (input) input.value = items[idx++ % items.length];
+            }
+            maybeAutoSave();
+        }
+
+        function normalizeAssignments(raw) {
+            if (!Array.isArray(raw)) return [];
+            return raw.map((item, idx) => ({
+                id: item.id || ("assignment_" + idx),
+                title: item.title || "Untitled Assignment",
+                due: item.dueAt || item.deadline || "",
+                completed: Boolean(typeof item.completed !== "undefined" ? item.completed : item.isCompleted)
+            }));
+        }
+
+        function renderAssignments() {
+            const data = normalizeAssignments(JSON.parse(localStorage.getItem(ASSIGNMENT_KEY) || "[]"));
+            const pending = data.filter(x => !x.completed);
+            document.getElementById("metricAssignments").textContent = String(pending.length);
+
+            const host = document.getElementById("assignmentRadar");
+            host.innerHTML = "";
+            pending
+                .sort((a, b) => {
+                    const at = a.due ? new Date(a.due).getTime() : Number.MAX_SAFE_INTEGER;
+                    const bt = b.due ? new Date(b.due).getTime() : Number.MAX_SAFE_INTEGER;
+                    return at - bt;
+                })
+                .slice(0, 5)
+                .forEach(item => {
+                    const row = document.createElement("div");
+                    row.className = "item";
+                    row.innerHTML = `
+                        <div>${item.title}</div>
+                        <div class="meta">Due: ${item.due ? new Date(item.due).toLocaleString() : "No deadline"}</div>
+                    `;
+                    host.appendChild(row);
+                });
+
+            if (pending.length === 0) {
+                const row = document.createElement("div");
+                row.className = "item";
+                row.textContent = "No pending assignments. Good job.";
+                host.appendChild(row);
+            }
+        }
+
+        function renderClassesMetric() {
+            const classes = JSON.parse(localStorage.getItem(CLASS_KEY) || "[]");
+            document.getElementById("metricClasses").textContent = Array.isArray(classes) ? classes.length : "0";
+        }
+
+        function renderHabitMetric() {
+            const habit = JSON.parse(localStorage.getItem(HABIT_KEY) || "{}");
+            const habits = Array.isArray(habit.habits) ? habit.habits : [];
+            const data = habit && typeof habit.data === "object" ? habit.data : {};
+            let total = 0;
+            let done = 0;
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().split("T")[0];
+                const day = data[key] || {};
+                habits.forEach(h => {
+                    total++;
+                    if (day[h]) done++;
+                });
+            }
+            const percent = total ? Math.round((done / total) * 100) : 0;
+            document.getElementById("metricHabit").textContent = percent + "%";
+            document.getElementById("habitPulseText").textContent = habits.length
+                ? "Last 7 days: " + done + " completed checks out of " + total + "."
+                : "Add habits in Habit Tracker to see pulse.";
+        }
+
+        function renderPlannerMetric() {
+            let filled = 0;
+            let total = 0;
+
+            for (let h = 6; h <= 23; h++) {
+                total++;
+                const value = (state.schedule[h] || "").trim();
+                if (value) filled++;
+            }
+
+            state.priorities.forEach(p => {
+                total++;
+                if ((p || "").trim()) filled++;
+            });
+
+            Object.values(state.matrix).forEach(v => {
+                total++;
+                if ((v || "").trim()) filled++;
+            });
+
+            total += 8;
+            filled += state.water.filter(Boolean).length;
+
+            const percent = total ? Math.round((filled / total) * 100) : 0;
+            document.getElementById("metricPlanner").textContent = percent + "%";
+        }
+
+        function resetPlanner() {
+            if (!confirm("Reset all planner data for this page?")) return;
+            localStorage.removeItem(PLANNER_KEY);
+            location.reload();
+        }
+
+        function setTodayLabel() {
+            const now = new Date();
+            const pretty = now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+            document.getElementById("todayLabel").textContent = "Today is " + pretty + ". Build a focused plan.";
+        }
+
+        function addTodo() {
+            const input = document.getElementById("todoInput");
+            const text = input.value.trim();
+            if (!text) return;
+            const todoList = document.getElementById("todoList");
+            const div = document.createElement("div");
+            div.className = "todo-item";
+            div.innerHTML = `
+                <input type="checkbox">
+                <span>${text}</span>
+                <button class="del-btn" onclick="this.parentElement.remove()">×</button>
+            `;
+            todoList.appendChild(div);
+            input.value = "";
+        }
+
+        document.getElementById("todoInput").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") addTodo();
+        });
+
+        window.addEventListener("storage", function (e) {
+            if (e.key === ASSIGNMENT_KEY) renderAssignments();
+            if (e.key === CLASS_KEY) renderClassesMetric();
+            if (e.key === HABIT_KEY) renderHabitMetric();
+        });
+
+        buildTimeline();
+        loadPlanner();
+        applyPlannerToUI();
+        setTodayLabel();
+        renderAssignments();
+        renderClassesMetric();
+        renderHabitMetric();
+        renderPlannerMetric();
+    </script>
+</body>
+</html>
