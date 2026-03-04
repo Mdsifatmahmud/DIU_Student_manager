@@ -385,6 +385,8 @@
 
 <script>
     const STORAGE_KEY = "diu_classes";
+    const COURSES_BOARD_KEY = "coursesBoard";
+    const SYNC_PREFIX = "course_sync_";
     let editingId = null;
 
     function addTodo() {
@@ -417,6 +419,45 @@
         }
     }
 
+    function getRegisteredCourses() {
+        try {
+            const board = JSON.parse(localStorage.getItem(COURSES_BOARD_KEY) || "{}");
+            if (Array.isArray(board && board.registered)) return board.registered;
+            return Array.isArray(board && board.notStarted) ? board.notStarted : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function toSyncId(course) {
+        const raw = ((course.code || "na") + "_" + (course.name || "untitled")).toLowerCase();
+        return SYNC_PREFIX + raw.replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+    }
+
+    function syncCoursesToClasses() {
+        const existing = getClasses();
+        const manualClasses = existing.filter(cls => !(cls && typeof cls.id === "string" && cls.id.startsWith(SYNC_PREFIX)));
+        const registeredCourses = getRegisteredCourses();
+
+        const syncedClasses = registeredCourses.map(course => {
+            const id = toSyncId(course);
+            const previous = existing.find(cls => cls && cls.id === id) || {};
+            return {
+                id: id,
+                name: course.name || "Untitled Course",
+                code: course.code || "N/A",
+                teacher: course.teacher || "Unknown",
+                schedule: previous.schedule || "Schedule not set",
+                days: Array.isArray(previous.days) ? previous.days : [],
+                startTime: previous.startTime || "",
+                endTime: previous.endTime || "",
+                note: previous.note || ""
+            };
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...manualClasses, ...syncedClasses]));
+    }
+
     function buildSchedule(days, startTime, endTime) {
         const dayText = days.length ? days.join("/") : "Days not set";
         const timeText = (startTime && endTime) ? `${startTime}-${endTime}` : "Time not set";
@@ -425,6 +466,7 @@
 
     function renderClasses() {
         const grid = document.getElementById("classGrid");
+        syncCoursesToClasses();
         const classes = getClasses();
         grid.innerHTML = "";
 

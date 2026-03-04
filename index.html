@@ -534,12 +534,6 @@
         });
 
         const STORAGE_KEY = "diu_classes";
-        const DEFAULT_CLASSES = [
-            { id: "cse131", name: "Discrete Mathematics", code: "CSE131", teacher: "Mr. Dewan Mamun Raza", schedule: "Wed/Mon/Tue study 3:30-4:30pm, Sat class 7:00-10:00am" },
-            { id: "mat211", name: "Engineering Mathematics", code: "MAT211", teacher: "Prof. Dr. Bimal Chandra Das", schedule: "Mon/Thu study 7:00-8:00pm" },
-            { id: "cse212", name: "Basic Electronics", code: "CSE212", teacher: "Zarin Anjuman Sejuti", schedule: "Sat class 10:00am-1:00pm" },
-            { id: "cse122", name: "Programming and Problem Solving", code: "CSE122", teacher: "Md Ibrahim Khan", schedule: "Mon/Wed/Fri class 5:30pm" }
-        ];
 
         function normalizeClass(cls, idx) {
             const normalizedDays = Array.isArray(cls.days)
@@ -577,11 +571,7 @@
 
         function getClasses() {
             let classes = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            if (!Array.isArray(classes) || classes.length === 0) {
-                classes = DEFAULT_CLASSES.slice();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(classes));
-                return classes;
-            }
+            if (!Array.isArray(classes) || classes.length === 0) return [];
             const normalized = classes.map((cls, idx) => normalizeClass(cls, idx));
             localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
             return normalized;
@@ -1194,4 +1184,3 @@
     </script>
 </body>
 </html>
-
