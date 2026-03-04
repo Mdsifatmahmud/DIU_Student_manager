@@ -308,7 +308,7 @@ h1{
             <li><a href="night.html"><span class="icon">🌚</span> Night Routine</a></li>
             <li><a href="allclasses.html"><span class="icon">田</span> All Classes</a></li>
             <li><a href="assignments.html"><span class="icon">田</span> Assignments</a></li>
-            <li><a href="friday.html"><span class="icon">団</span> View of Friday</a></li>
+            <li><a href="weekend.html"><span class="icon">🌙</span>Weekend</a></li>
         </ul>
         <div class="todo-box">
             <h4>To Do List:</h4>
@@ -414,9 +414,11 @@ const BOARD_KEY="coursesBoard";
 const USER_ONLY_INIT_KEY="coursesBoard_userOnlyInit_v1";
 const CLASSES_STORAGE_KEY="diu_classes";
 const EXAMS_STORAGE_KEY="diu_exams_by_class";
+const ASSIGNMENT_STORAGE_KEY="assignment_system_v2";
 const SYNC_PREFIX="course_sync_";
 let board=JSON.parse(localStorage.getItem(BOARD_KEY)||"null")||defaultData;
 let autoInProgress=[];
+let derivedDone=[];
 
 function ensureBoardShape(){
 if(!board||typeof board!=="object") board={...defaultData};
@@ -436,6 +438,8 @@ ${id==="notStarted"?`<button class="del-subject-btn" onclick="deleteSubject(${in
 <span class="meta">${item.code||"N/A"} | ${item.teacher||"Unknown"}</span>
 ${id==="inProgress"&&typeof item.progressPercent==="number"
 ?`<span class="tag">${item.progressPercent}% progress</span>`
+:id==="done"&&item.doneByAssignment
+?`<span class="tag">100% Completed</span>`
 :`<span class="tag">${item.code||"course"}</span>`}
 </div>
 `).join("");
@@ -454,7 +458,7 @@ linksBox.innerHTML=notStartedCourses.map(item=>`<p>${item.name}</p>`).join("");
 function updateCounts(){
 document.getElementById("notStartedCount").textContent=board.notStarted.length;
 document.getElementById("inProgressCount").textContent=autoInProgress.length;
-document.getElementById("doneCount").textContent=board.done.length;
+document.getElementById("doneCount").textContent=derivedDone.length;
 }
 
 function saveBoard(){
@@ -515,6 +519,59 @@ progressPercent:Math.max(0,Math.min(100,progressPercent))
 }).filter(Boolean);
 }
 
+function normalizeText(value){
+return String(value||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
+
+function getCompletedAssignments(){
+const raw=JSON.parse(localStorage.getItem(ASSIGNMENT_STORAGE_KEY)||"[]");
+if(!Array.isArray(raw)) return [];
+return raw
+.filter(item=>Boolean(typeof item.isCompleted!=="undefined" ? item.isCompleted : item.completed))
+.map(item=>({
+title:item&&item.title?String(item.title):""
+}));
+}
+
+function assignmentMatchesCourse(assignment,course){
+const assignmentTitle=normalizeText(assignment&&assignment.title);
+const courseName=normalizeText(course&&course.name);
+const courseCode=normalizeText(course&&course.code);
+if(!assignmentTitle) return false;
+if(courseName && (assignmentTitle===courseName || assignmentTitle.includes(courseName) || courseName.includes(assignmentTitle))) return true;
+if(courseCode && (assignmentTitle===courseCode || assignmentTitle.includes(courseCode) || courseCode.includes(assignmentTitle))) return true;
+return false;
+}
+
+function splitInProgressByAssignmentCompletion(items){
+const completedAssignments=getCompletedAssignments();
+const stillInProgress=[];
+const doneFromAssignment=[];
+
+items.forEach(course=>{
+const matched=completedAssignments.some(assignment=>assignmentMatchesCourse(assignment,course));
+if(matched){
+doneFromAssignment.push({...course,doneByAssignment:true});
+}else{
+stillInProgress.push(course);
+}
+});
+
+return {stillInProgress,doneFromAssignment};
+}
+
+function buildDerivedDone(doneFromAssignment){
+const manualDone=Array.isArray(board.done)?board.done:[];
+const all=[...manualDone,...doneFromAssignment];
+const seen=new Set();
+return all.filter(item=>{
+const key=((item&&item.code)||"")+"|"+((item&&item.name)||"");
+if(seen.has(key)) return false;
+seen.add(key);
+return true;
+});
+}
+
 function initUserOnlyEmptyBoard(){
 if(localStorage.getItem(USER_ONLY_INIT_KEY)) return;
 board={notStarted:[],inProgress:[],done:[]};
@@ -523,10 +580,13 @@ localStorage.setItem(USER_ONLY_INIT_KEY,"1");
 }
 
 function renderBoard(){
-autoInProgress=buildAutoInProgress();
+const autoCourses=buildAutoInProgress();
+const split=splitInProgressByAssignmentCompletion(autoCourses);
+autoInProgress=split.stillInProgress;
+derivedDone=buildDerivedDone(split.doneFromAssignment);
 renderColumn("notStarted",board.notStarted);
 renderColumn("inProgress",autoInProgress);
-renderColumn("done",board.done);
+renderColumn("done",derivedDone);
 renderCourseLinks();
 updateCounts();
 syncCoursesToClasses();

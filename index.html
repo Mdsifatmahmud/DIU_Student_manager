@@ -26,11 +26,14 @@
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-black);
+            background:
+                radial-gradient(900px 500px at 75% -15%, rgba(255, 77, 141, 0.16), transparent 55%),
+                radial-gradient(700px 420px at -10% 30%, rgba(51, 126, 169, 0.14), transparent 55%),
+                var(--bg-black);
             color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
         }
+
+        .layout { display: flex; min-height: 100vh; }
 
         /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
@@ -54,6 +57,7 @@
             background: var(--accent-burgundy);
             border-radius: 5px;
             margin-bottom: 20px;
+            color: #fff;
         }
 
         .sidebar h4 {
@@ -73,36 +77,80 @@
             text-decoration: none;
             font-size: 14px;
             border-radius: 4px;
-            transition: background 0.2s;
+            transition: .2s;
         }
         .menu li a:hover { background: rgba(255, 255, 255, 0.05); }
+        .menu li a.active { background: rgba(255, 255, 255, 0.08); }
         .icon { margin-right: 12px; width: 20px; text-align: center; font-size: 16px; }
 
         .todo-box { margin-top: 30px; padding: 0 10px; }
         .todo-item { display: flex; align-items: center; font-size: 14px; margin-bottom: 8px; color: var(--text-main); }
         .todo-item input { margin-right: 10px; accent-color: var(--notion-blue); }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex-grow: 1; padding: 40px; max-width: 1200px; margin: 0 auto; }
-        
-        .top-banner { text-align: center; margin-bottom: 40px; }
-        .top-banner h1 { font-size: 32px; margin: 10px 0; font-weight: 700; }
-        .top-meta { font-size: 12px; color: var(--text-dim); display: flex; justify-content: center; gap: 15px; }
+        /* --- MAIN CONTENT (Courses-style shell) --- */
+        .main-area { flex-grow: 1; min-width: 0; }
 
-        .section-container { margin-bottom: 40px; }
+        .hero-banner {
+            height: 165px;
+            background:
+                linear-gradient(120deg, rgba(74, 29, 46, 0.95), rgba(42, 19, 40, 0.82)),
+                radial-gradient(circle at 20% 40%, rgba(255, 77, 141, 0.25), transparent 35%);
+            width: 100%;
+            border-bottom: 1px solid #2f3240;
+        }
+
+        .content-wrap {
+            max-width: 1100px;
+            margin: -56px auto 40px;
+            padding: 0 26px;
+        }
+
+        .page-icon {
+            font-size: 62px;
+            margin-bottom: 8px;
+            display: block;
+            text-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 50px;
+            font-weight: 750;
+            letter-spacing: -0.6px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .top-meta {
+            font-size: 13px;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-container {
+            margin-bottom: 34px;
+            background: linear-gradient(180deg, rgba(24, 30, 44, 0.8), rgba(16, 21, 33, 0.7));
+            border: 1px solid #2a3245;
+            border-radius: 16px;
+            padding: 18px 18px 16px;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+        }
         .full-width-header {
-            background-color: var(--section-header-bg);
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: bold;
+            border-bottom: 1px solid #333d54;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .sub-header { font-size: 20px; margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px; }
+        .sub-header { font-size: 24px; margin: 12px 0 12px 0; display: flex; align-items: center; gap: 10px; }
 
         /* --- CLASS GRID --- */
         .class-grid {
@@ -235,6 +283,41 @@
         .assignment-overdue { color: #ff6b6b; }
         .assignment-pending { color: #f6c453; }
 
+        .course-progress-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .course-progress-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .course-progress-item h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        .course-progress-item p {
+            margin: 4px 0;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .progress-badge {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--tag-green);
+            color: #d8ffe1;
+            font-weight: 700;
+        }
+
         .dropdown-list {
             display: grid;
             gap: 12px;
@@ -272,10 +355,56 @@
         .task-dropdown .dropdown-body p { margin: 6px 0; }
         .dropdown-list.collapsed { display: none; }
         .dropdown-toggle { cursor: pointer; user-select: none; }
+
+        .weekly-progress-wrap {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .weekly-progress-title {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .weekly-progress-bar {
+            height: 10px;
+            background: #333b4d;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .weekly-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #337ea9, #4cafef);
+            transition: width 0.3s ease;
+        }
+
+        .weekly-progress-text {
+            font-size: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .weekly-empty {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        @media(max-width: 900px) {
+            .sidebar { display: none; }
+            .main-area { width: 100%; }
+            .content-wrap { margin-top: -48px; padding: 0 14px 30px; }
+            .page-title { font-size: 36px; }
+        }
     </style>
 </head>
 <body>
-
+<div class="layout">
     <aside class="sidebar">
         <div class="nav-header">
             <a href="index.html" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
@@ -295,7 +424,7 @@
             <li><a href="night.html"><span class="icon">🌚</span> Night Routine</a></li>
             <li><a href="allclasses.html"><span class="icon">田</span> All Classes</a></li>
             <li><a href="assignments.html"><span class="icon">田</span> Assignments</a></li>
-            <li><a href="friday.html"><span class="icon">団</span> View of Friday</a></li>
+            <li><a href="weekend.html"><span class="icon">🌙</span>Weekend</a></li>
         </ul>
         <div class="todo-box">
             <h4>To Do List:</h4>
@@ -312,14 +441,14 @@
         </div>       
     </aside>
 
-    <main class="main-content">
-        <div class="top-banner">
-            <span>🎓</span>
-            <h1>DIU Student Manager</h1>
-            <div class="top-meta">
-                <span>✔ Add verification</span>
-                <span>💬 Add comment</span>
-            </div>
+    <div class="main-area">
+        <div class="hero-banner"></div>
+        <main class="content-wrap">
+        <span class="page-icon">🎓</span>
+        <h1 class="page-title">DIU Student Manager</h1>
+        <div class="top-meta">
+            <span><a href="https://www.linkedin.com/in/mdsifatmahmud2002/" target="_blank" style="color: inherit; text-decoration: none;"> Md.Sifat Mahmud</a></span>
+            <span><a href="https://t.me/sifatmahmud2002" target="_blank" style="color: inherit; text-decoration: none;">💬 Telegram</a></span>
         </div>
 
         <section class="section-container">
@@ -327,11 +456,20 @@
                 <a href="assignments.html" style="color: inherit; text-decoration: none;">Assignment Tracker</a>
             </div>
             <div class="assignment-list" id="dashboardAssignmentList"></div>
-            <h2 class="sub-header"><a href="allclasses.html" style="color: inherit; text-decoration: none;">All Classes</a></h2>
-            
-            <div class="class-grid" id="dashboardClassGrid">
-                <div class="new-btn" onclick="location.href='allclasses.html'">+ New Class</div>
+        </section>
+
+        <section class="section-container">
+            <div class="full-width-header">
+                <a href="allclasses.html" style="color: inherit; text-decoration: none;">All Classes</a>
             </div>
+            <div class="class-grid" id="dashboardClassGrid"></div>
+        </section>
+
+        <section class="section-container">
+            <div class="full-width-header">
+                <a href="courses.html" style="color: inherit; text-decoration: none;">In Progress Courses</a>
+            </div>
+            <div class="course-progress-list" id="dashboardInProgressCourses"></div>
         </section>
 
         <section class="section-container">
@@ -343,7 +481,18 @@
             </div>
         </section>
 
+        <section class="section-container">
+            <div class="full-width-header">
+                <a href="weekend.html" style="color: inherit; text-decoration: none;">Weekend Weekly Statistics</a>
+            </div>
+            <div class="weekly-progress-wrap">
+                <div id="dashboardWeekendWeeklyStats"></div>
+            </div>
+        </section>
+
     </main>
+    </div>
+</div>
 
     <script>
         document.querySelectorAll('.habit-card').forEach(card => {
@@ -393,13 +542,37 @@
         ];
 
         function normalizeClass(cls, idx) {
+            const normalizedDays = Array.isArray(cls.days)
+                ? cls.days.map(day => String(day || "").trim()).filter(Boolean)
+                : [];
+            const derivedSchedule = (cls.schedule && String(cls.schedule).trim())
+                ? cls.schedule
+                : ((normalizedDays.length && cls.startTime && cls.endTime)
+                    ? (normalizedDays.join("/") + " " + cls.startTime + "-" + cls.endTime)
+                    : "Schedule not set");
             return {
                 id: cls.id || ("class_" + Date.now() + "_" + idx),
                 name: cls.name || "Untitled Class",
                 code: cls.code || "N/A",
                 teacher: cls.teacher || "Unknown",
-                schedule: cls.schedule || "Schedule not set"
+                schedule: derivedSchedule,
+                days: normalizedDays,
+                startTime: cls.startTime || "",
+                endTime: cls.endTime || "",
+                note: cls.note || ""
             };
+        }
+
+        function getTodayShortDay() {
+            return new Date().toLocaleDateString("en-US", { weekday: "short" });
+        }
+
+        function classMatchesToday(cls, todayShort) {
+            const short = String(todayShort || "").toLowerCase();
+            if (Array.isArray(cls.days) && cls.days.length > 0) {
+                return cls.days.some(day => String(day || "").trim().toLowerCase() === short);
+            }
+            return String(cls.schedule || "").toLowerCase().includes(short);
         }
 
         function getClasses() {
@@ -418,26 +591,35 @@
             const grid = document.getElementById("dashboardClassGrid");
             if (!grid) return;
 
-            const classes = getClasses().slice(0, 4);
+            const allClasses = getClasses();
+            const todayShort = getTodayShortDay();
+            const classes = allClasses.filter(cls => classMatchesToday(cls, todayShort)).slice(0, 4);
             grid.innerHTML = "";
 
-            classes.forEach(cls => {
-                const card = document.createElement("div");
-                card.className = "class-card";
-                card.innerHTML = `
-                    <h3>${cls.name}</h3>
-                    <span class="code">${cls.code}</span>
-                    <span class="tag" style="background:var(--tag-orange)">${cls.teacher}</span>
-                    <ul><li>${cls.schedule}</li></ul>
+            if (classes.length === 0) {
+                const emptyCard = document.createElement("div");
+                emptyCard.className = "class-card";
+                emptyCard.innerHTML = `
+                    <h3>No class today</h3>
+                    <span class="code">${todayShort}</span>
+                    <span class="tag" style="background:var(--tag-purple)">Today</span>
+                    <ul><li>No scheduled class found for today.</li></ul>
                 `;
-                grid.appendChild(card);
-            });
+                grid.appendChild(emptyCard);
+            } else {
+                classes.forEach(cls => {
+                    const card = document.createElement("div");
+                    card.className = "class-card";
+                    card.innerHTML = `
+                        <h3>${cls.name}</h3>
+                        <span class="code">${cls.code}</span>
+                        <span class="tag" style="background:var(--tag-orange)">${cls.teacher}</span>
+                        <ul><li>${cls.schedule}</li></ul>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
 
-            const newButton = document.createElement("div");
-            newButton.className = "new-btn";
-            newButton.textContent = "+ New Class";
-            newButton.onclick = function() { location.href = "allclasses.html"; };
-            grid.appendChild(newButton);
         }
 
         const ASSIGNMENT_STORAGE_KEY = "assignment_system_v2";
@@ -506,11 +688,20 @@
             const list = document.getElementById("dashboardAssignmentList");
             if (!list) return;
 
+            const now = new Date();
+            const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const endOfNextWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7, 23, 59, 59, 999).getTime();
+
             const items = getAssignments()
-                .filter(item => !item.isCompleted)
+                .filter(item => {
+                    if (item.isCompleted) return false;
+                    const dueTime = new Date(item.dueAt).getTime();
+                    if (Number.isNaN(dueTime)) return false;
+                    return dueTime >= startOfToday && dueTime <= endOfNextWeek;
+                })
                 .sort((a, b) => {
-                    const aTime = a.dueAt ? new Date(a.dueAt).getTime() : Number.MAX_SAFE_INTEGER;
-                    const bTime = b.dueAt ? new Date(b.dueAt).getTime() : Number.MAX_SAFE_INTEGER;
+                    const aTime = new Date(a.dueAt).getTime();
+                    const bTime = new Date(b.dueAt).getTime();
                     return aTime - bTime;
                 })
                 .slice(0, 6);
@@ -532,15 +723,10 @@
             if (items.length === 0) {
                 const empty = document.createElement("div");
                 empty.className = "assignment-item";
-                empty.innerHTML = "<h3>No uncompleted assignments</h3><p>Add one from the card below.</p>";
+                empty.innerHTML = "<h3>No assignments for today to next 7 days</h3><p>Add or update deadlines from the Assignments page.</p>";
                 list.appendChild(empty);
             }
 
-            const newButton = document.createElement("div");
-            newButton.className = "new-btn";
-            newButton.textContent = "+ New Assignment";
-            newButton.onclick = addNewAssignment;
-            list.appendChild(newButton);
         }
 
         const HABIT_STORAGE_KEY = "diu_habit_tracker_final";
@@ -558,6 +744,95 @@
             } catch (err) {
                 return { habits: [], data: {} };
             }
+        }
+
+        function normalizeDashboardText(value) {
+            return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+        }
+
+        function isAssignmentCompletedItem(item) {
+            return Boolean(typeof item.isCompleted !== "undefined" ? item.isCompleted : item.completed);
+        }
+
+        function assignmentMatchesCourseTitle(assignmentTitle, course) {
+            const title = normalizeDashboardText(assignmentTitle);
+            const name = normalizeDashboardText(course && course.name);
+            const code = normalizeDashboardText(course && course.code);
+            if (!title) return false;
+            if (name && (title === name || title.includes(name) || name.includes(title))) return true;
+            if (code && (title === code || title.includes(code) || code.includes(title))) return true;
+            return false;
+        }
+
+        function getDashboardInProgressCourses() {
+            const COURSES_BOARD_KEY = "coursesBoard";
+            const EXAMS_STORAGE_KEY = "diu_exams_by_class";
+            const ASSIGNMENTS_KEY = "assignment_system_v2";
+            const SYNC_PREFIX = "course_sync_";
+
+            const board = JSON.parse(localStorage.getItem(COURSES_BOARD_KEY) || "{}");
+            const registeredCourses = Array.isArray(board && board.registered)
+                ? board.registered
+                : (Array.isArray(board && board.notStarted) ? board.notStarted : []);
+            const examStoreRaw = JSON.parse(localStorage.getItem(EXAMS_STORAGE_KEY) || "{}");
+            const examStore = (examStoreRaw && typeof examStoreRaw === "object") ? examStoreRaw : {};
+            const assignmentsRaw = JSON.parse(localStorage.getItem(ASSIGNMENTS_KEY) || "[]");
+            const completedAssignments = Array.isArray(assignmentsRaw)
+                ? assignmentsRaw.filter(isAssignmentCompletedItem)
+                : [];
+
+            return registeredCourses.map(course => {
+                const syncId = SYNC_PREFIX + (((course.code || "na") + "_" + (course.name || "untitled"))
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "_")
+                    .replace(/^_+|_+$/g, ""));
+                const exams = Array.isArray(examStore[syncId]) ? examStore[syncId] : [];
+                const marks = exams
+                    .map(exam => Number(exam && (exam.mark ?? exam.score)))
+                    .filter(mark => Number.isFinite(mark) && mark >= 0 && mark <= 15);
+                if (marks.length === 0) return null;
+
+                const avg = marks.reduce((sum, m) => sum + m, 0) / marks.length;
+                const progressPercent = Math.max(0, Math.min(100, Math.round((avg / 15) * 100)));
+                const movedToDone = completedAssignments.some(item =>
+                    assignmentMatchesCourseTitle(item && item.title, course)
+                );
+
+                if (movedToDone) return null;
+                return {
+                    name: course.name || "Untitled Course",
+                    code: course.code || "N/A",
+                    teacher: course.teacher || "Unknown",
+                    progressPercent: progressPercent
+                };
+            }).filter(Boolean);
+        }
+
+        function renderDashboardInProgressCourses() {
+            const host = document.getElementById("dashboardInProgressCourses");
+            if (!host) return;
+            const items = getDashboardInProgressCourses().slice(0, 6);
+            host.innerHTML = "";
+
+            if (items.length === 0) {
+                const empty = document.createElement("div");
+                empty.className = "course-progress-item";
+                empty.innerHTML = "<h3>No in-progress courses</h3><p>Courses with exam progress will appear here.</p>";
+                host.appendChild(empty);
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "course-progress-item";
+                card.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>${item.code} | ${item.teacher}</p>
+                    <span class="progress-badge">${item.progressPercent}% progress</span>
+                `;
+                card.addEventListener("click", function() { location.href = "courses.html"; });
+                host.appendChild(card);
+            });
         }
 
         function renderDashboardHabitChart() {
@@ -614,6 +889,31 @@
                     }
                 }
             });
+        }
+
+        function renderDashboardWeekendWeeklyStatistics() {
+            const host = document.getElementById("dashboardWeekendWeeklyStats");
+            if (!host) return;
+
+            const tasks = JSON.parse(localStorage.getItem("weekTasks") || "[]");
+            const studies = JSON.parse(localStorage.getItem("studies") || "[]");
+
+            const safeTasks = Array.isArray(tasks) ? tasks : [];
+            const safeStudies = Array.isArray(studies) ? studies : [];
+
+            const totalTasks = safeTasks.length;
+            const completedTasks = safeTasks.filter(t => t && t.done).length;
+            const totalHours = safeStudies.reduce((sum, s) => sum + Number((s && s.hours) || 0), 0);
+            const rate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            host.innerHTML = `
+                <div class="weekly-progress-title">Live stats from Weekend page</div>
+                <div class="weekly-progress-bar">
+                    <div class="weekly-progress-fill" style="width:${rate}%"></div>
+                </div>
+                <div class="weekly-progress-text">${rate}% completion (${completedTasks}/${totalTasks} tasks)</div>
+                <div class="weekly-progress-text" style="margin-top:6px;">Total study hours: ${totalHours}</div>
+            `;
         }
 
         const MWF_PLAN_KEY = "diu_mwf_plan";
@@ -863,6 +1163,10 @@
             if (e.key === MWF_PLAN_KEY) renderDashboardMondayDropdowns();
             if (e.key === TTH_PLAN_KEY) renderDashboardTthDropdowns();
             if (e.key === FRIDAY_PLAN_KEY) renderDashboardFridayDropdowns();
+            if (e.key === "weekTasks" || e.key === "studies") renderDashboardWeekendWeeklyStatistics();
+            if (e.key === "coursesBoard" || e.key === "diu_exams_by_class" || e.key === ASSIGNMENT_STORAGE_KEY) {
+                renderDashboardInProgressCourses();
+            }
         });
 
         document.addEventListener("visibilitychange", function() {
@@ -873,6 +1177,8 @@
                 renderDashboardMondayDropdowns();
                 renderDashboardTthDropdowns();
                 renderDashboardFridayDropdowns();
+                renderDashboardWeekendWeeklyStatistics();
+                renderDashboardInProgressCourses();
             }
         });
 
@@ -882,11 +1188,10 @@
         renderDashboardMondayDropdowns();
         renderDashboardTthDropdowns();
         renderDashboardFridayDropdowns();
+        renderDashboardWeekendWeeklyStatistics();
+        renderDashboardInProgressCourses();
         bindDropdownToggles();
     </script>
 </body>
 </html>
-
-
-
 

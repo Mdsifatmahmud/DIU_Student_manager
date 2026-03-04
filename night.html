@@ -7,28 +7,29 @@
 
 <style>
 :root{
-  --bg:#0f0f0f;
+  --bg:#0f1117;
   --sidebar-bg:#1a1518;
-  --card-bg:#1e1e1e;
   --text-main:#ffffff;
   --text-dim:#9b9b9b;
   --accent-burgundy:#4a1d2e;
   --border-color:#2d2d2d;
   --notion-blue:#337ea9;
+  --muted:#a8b4cb;
+  --accent-pink:#ff4d8d;
   --accent-blue:#4cafef;
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box;margin:0;padding:0;}
 body{
-  margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);
+  background:
+    radial-gradient(900px 500px at 75% -15%, rgba(255, 77, 141, 0.16), transparent 55%),
+    radial-gradient(700px 420px at -10% 30%, rgba(51, 126, 169, 0.14), transparent 55%),
+    var(--bg);
   color:var(--text-main);
-  display:flex;
-  min-height:100vh;
 }
 
-/* ===== SIDEBAR (INDEX STYLE) ===== */
+.layout{display:flex;min-height:100vh;}
 
 .sidebar{
   width:260px;
@@ -64,7 +65,6 @@ body{
 }
 
 .menu{list-style:none;padding:0;margin:0;}
-
 .menu li a{
   display:flex;
   align-items:center;
@@ -75,26 +75,11 @@ body{
   border-radius:4px;
   transition:.2s;
 }
-
-.menu li a:hover{
-  background:rgba(255,255,255,0.05);
-}
-
-.menu li a.active{
-  background:rgba(255,255,255,0.08);
-  font-weight:600;
-}
-
-.icon{
-  margin-right:12px;
-  width:20px;
-  text-align:center;
-}
-
-/* ===== TODO (INDEX STYLE) ===== */
+.menu li a:hover{ background:rgba(255,255,255,0.05); }
+.menu li a.active{ background:rgba(255,255,255,0.08); font-weight:600; }
+.icon{ margin-right:12px; width:20px; text-align:center; }
 
 .todo-box{margin-top:30px;padding:0 10px;}
-
 .todo-item{
   display:flex;
   align-items:center;
@@ -102,14 +87,8 @@ body{
   font-size:14px;
   margin-bottom:8px;
 }
-
-.todo-item input{
-  margin-right:10px;
-  accent-color:var(--notion-blue);
-}
-
-.todo-item span{flex-grow:1;}
-
+.todo-item input{ margin-right:10px; accent-color:var(--notion-blue); }
+.todo-item span{ flex-grow:1; }
 .del-btn{
   background:none;
   border:none;
@@ -120,49 +99,99 @@ body{
   line-height:1;
   display:none;
 }
+.todo-item:hover .del-btn{ display:block; color:#ff4d4d; }
 
-.todo-item:hover .del-btn{
+.main-area{flex-grow:1;min-width:0;}
+.hero-banner{
+  height:165px;
+  background:
+    linear-gradient(120deg, rgba(74, 29, 46, 0.95), rgba(42, 19, 40, 0.82)),
+    radial-gradient(circle at 20% 40%, rgba(255, 77, 141, 0.25), transparent 35%);
+  width:100%;
+  border-bottom:1px solid #2f3240;
+}
+
+.content-wrap{
+  max-width:1000px;
+  margin:-56px auto 40px;
+  padding:0 26px;
+}
+
+.page-icon{
+  font-size:62px;
+  margin-bottom:8px;
   display:block;
-  color:#ff4d4d;
+  text-shadow:0 8px 18px rgba(0,0,0,0.35);
 }
 
-/* ===== MAIN CONTENT ===== */
-
-.main-content{
-  flex-grow:1;
-  padding:40px;
-  max-width:800px;
-  margin:0 auto;
+.page-title{
+  font-size:50px;
+  font-weight:750;
+  letter-spacing:-0.6px;
+  margin-bottom:28px;
 }
 
-.header{
-  text-align:center;
-  margin-bottom:30px;
+.section-container{
+  margin-bottom:24px;
+  background:linear-gradient(180deg, rgba(24, 30, 44, 0.8), rgba(16, 21, 33, 0.7));
+  border:1px solid #2a3245;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 14px 30px rgba(0,0,0,0.25);
 }
 
-.header .emoji{
-  font-size:60px;
-  display:block;
-  margin-bottom:10px;
+.section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #333d54;
+  padding-bottom:10px;
+  margin-bottom:16px;
+}
+
+.section-header h2{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:-0.2px;
+}
+
+.section-icons{
+  color:var(--muted);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.section-icons span{
+  width:24px;
+  height:24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
 }
 
 .quote{
-  margin-top:15px;
-  color:var(--text-dim);
+  margin:0;
+  color:#d6ddef;
   font-style:italic;
   border-left:3px solid var(--accent-blue);
-  padding-left:15px;
-  text-align:left;
+  padding-left:12px;
+  font-size:14px;
 }
 
 .habit-item{
   display:flex;
   align-items:center;
   padding:12px 15px;
-  background:var(--card-bg);
-  border-radius:8px;
+  background:linear-gradient(180deg, #1b2433, #151e2d);
+  border:1px solid #32405a;
+  border-radius:10px;
   margin-bottom:10px;
   cursor:pointer;
+  color:#e6eefc;
 }
 
 .habit-item input{
@@ -174,21 +203,13 @@ body{
 
 .completed{
   text-decoration:line-through;
-  color:#555!important;
-}
-
-.progress-box{
-  margin-top:30px;
-  background:var(--card-bg);
-  padding:20px;
-  border-radius:12px;
-  border:1px solid var(--border-color);
+  color:#8fa0be!important;
 }
 
 .progress-bar-bg{
   width:100%;
-  height:14px;
-  background:#2b2b2b;
+  height:12px;
+  background:#333b4d;
   border-radius:20px;
   overflow:hidden;
 }
@@ -202,16 +223,47 @@ body{
 
 .percent{
   margin-top:10px;
-  font-size:14px;
-  color:var(--text-dim);
+  font-size:13px;
+  color:var(--muted);
   text-align:right;
+}
+
+.add-routine-box{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+.add-routine-box input{
+  flex-grow:1;
+  background:#222b3d;
+  border:1px solid #3a4761;
+  color:white;
+  padding:11px;
+  border-radius:8px;
+}
+
+.add-routine-box button{
+  border:1px solid #2e6a8a;
+  background:#337ea9;
+  color:#fff;
+  padding:0 18px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+@media(max-width:1000px){
+  .sidebar{display:none;}
+  .content-wrap{margin-top:-48px;padding:0 14px 30px;}
+  .page-title{font-size:36px;}
+  .section-container{padding:14px;border-radius:14px;}
 }
 </style>
 </head>
 
 <body>
-
-<!-- SIDEBAR -->
+<div class="layout">
 <aside class="sidebar">
 <a href="index.html" class="nav-header">
   <span>🎓</span> DIU Student Manager
@@ -229,7 +281,7 @@ body{
 <li><a href="night.html" class="active"><span class="icon">🌚</span> Night Routine</a></li>
 <li><a href="allclasses.html"><span class="icon">田</span> All Classes</a></li>
 <li><a href="assignments.html"><span class="icon">田</span> Assignments</a></li>
-<li><a href="friday.html"><span class="icon">団</span> View of Friday</a></li>
+<li><a href="weekend.html"><span class="icon">🌙</span>Weekend</a></li>
 </ul>
 
 <div class="todo-box">
@@ -246,27 +298,51 @@ body{
 </div>
 </aside>
 
-<!-- MAIN -->
-<main class="main-content">
+<div class="main-area">
+<div class="hero-banner"></div>
+<main class="content-wrap">
+<span class="page-icon">🌚</span>
+<h1 class="page-title">Night Routine</h1>
 
-<div class="header">
-<span class="emoji">🌚</span>
-<h1>Night Routine</h1>
-<div class="quote">Be thankful to God everyday.</div>
-</div>
+<section class="section-container">
+  <div class="section-header">
+    <h2>Reflection</h2>
+    <div class="section-icons"><span>☾</span></div>
+  </div>
+  <p class="quote">Be thankful to God everyday.</p>
+</section>
 
-<label class="habit-item"><input type="checkbox" class="check"><span>Brush my teeth</span></label>
-<label class="habit-item"><input type="checkbox" class="check"><span>Wash face and apply cream</span></label>
-<label class="habit-item"><input type="checkbox" class="check"><span>Thank God for this day</span></label>
+<section class="section-container">
+  <div class="section-header">
+    <h2>Night Checklist</h2>
+    <div class="section-icons"><span>≡</span><span>⌕</span></div>
+  </div>
 
-<div class="progress-box">
-<div class="progress-bar-bg">
-<div class="progress-fill" id="progressFill"></div>
-</div>
-<div class="percent" id="percent">0% completed</div>
-</div>
+  <label class="habit-item"><input type="checkbox" class="check"><span>Brush my teeth</span></label>
+  <label class="habit-item"><input type="checkbox" class="check"><span>Wash face and apply cream</span></label>
+  <label class="habit-item"><input type="checkbox" class="check"><span>Thank God for this day</span></label>
+
+  <div class="add-routine-box">
+    <input type="text" id="newNightInput" placeholder="Add new routine item...">
+    <button onclick="addNightItem()">Add</button>
+  </div>
+</section>
+
+<section class="section-container">
+  <div class="section-header">
+    <h2>Progress</h2>
+    <div class="section-icons"><span>◔</span></div>
+  </div>
+
+  <div class="progress-bar-bg">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="percent" id="percent">0% completed</div>
+</section>
 
 </main>
+</div>
+</div>
 
 <script>
 function addTodo(){
@@ -283,19 +359,52 @@ document.getElementById('todoInput').addEventListener('keypress',e=>{
 if(e.key==='Enter') addTodo();
 });
 
-const checks=document.querySelectorAll('.check');
 const fill=document.getElementById('progressFill');
 const percent=document.getElementById('percent');
 
-checks.forEach(cb=>{
-cb.addEventListener('change',()=>{
+function updateNightProgress(){
+const checks=document.querySelectorAll('.check');
 const total=checks.length;
 const checked=document.querySelectorAll('.check:checked').length;
-const value=Math.round((checked/total)*100);
+const value=total?Math.round((checked/total)*100):0;
 fill.style.width=value+'%';
 percent.innerText=value+'% completed';
+
+checks.forEach(x=>{
+  const label=x.parentElement;
+  const text=label.querySelector('span');
+  if(x.checked) text.classList.add('completed');
+  else text.classList.remove('completed');
 });
+}
+
+function bindNightChecks(){
+document.querySelectorAll('.check').forEach(cb=>{
+  if(cb.dataset.bound==="1") return;
+  cb.dataset.bound="1";
+  cb.addEventListener('change',updateNightProgress);
 });
+}
+
+function addNightItem(){
+const input=document.getElementById('newNightInput');
+if(!input || !input.value.trim()) return;
+const label=document.createElement('label');
+label.className='habit-item';
+label.innerHTML=`<input type="checkbox" class="check"><span>${input.value}</span>`;
+const addBox=input.parentElement;
+addBox.parentElement.insertBefore(label, addBox);
+input.value='';
+bindNightChecks();
+updateNightProgress();
+}
+
+document.getElementById('newNightInput').addEventListener('keypress',e=>{
+if(e.key==='Enter') addNightItem();
+});
+
+bindNightChecks();
+updateNightProgress();
 </script>
 
 </body>

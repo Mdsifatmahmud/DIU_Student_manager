@@ -12,14 +12,23 @@
   --sidebar-bg:#1a1518;
   --border-color:#2d2d2d;
   --accent-burgundy:#4a1d2e;
-  --card-bg:#1e1e1e;
   --text-main:#ffffff;
   --text-dim:#9b9b9b;
   --notion-blue:#337ea9;
+  --muted:#a8b4cb;
+  --accent-pink:#ff4d8d;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;}
-body{background:var(--bg);color:var(--text-main);display:flex;min-height:100vh}
+body{
+  background:
+    radial-gradient(900px 500px at 75% -15%, rgba(255, 77, 141, 0.16), transparent 55%),
+    radial-gradient(700px 420px at -10% 30%, rgba(51, 126, 169, 0.14), transparent 55%),
+    var(--bg);
+  color:var(--text-main);
+}
+
+.layout{display:flex;min-height:100vh;}
 
 /* ===== SIDEBAR ===== */
 .sidebar{
@@ -28,12 +37,15 @@ body{background:var(--bg);color:var(--text-main);display:flex;min-height:100vh}
   border-right:1px solid var(--border-color);
   padding:20px 10px;
   height:100vh;
+  position:sticky;
+  top:0;
+  overflow-y:auto;
 }
 
 .nav-header{
   background:var(--accent-burgundy);
-  padding:8px 12px;
-  border-radius:6px;
+  padding:10px;
+  border-radius:5px;
   font-weight:bold;
   font-size:14px;
   margin-bottom:20px;
@@ -89,33 +101,87 @@ body{background:var(--bg);color:var(--text-main);display:flex;min-height:100vh}
 .todo-item:hover .del-btn { display: block; color: #ff4d4d; }
 
 /* ===== MAIN ===== */
-.main{flex:1;padding:40px;overflow:auto}
+.main-area{flex-grow:1;min-width:0;}
 
-.hero{
-  text-align:center;
-  margin:6px 0 26px;
+.hero-banner{
+  height:165px;
+  background:
+    linear-gradient(120deg, rgba(74, 29, 46, 0.95), rgba(42, 19, 40, 0.82)),
+    radial-gradient(circle at 20% 40%, rgba(255, 77, 141, 0.25), transparent 35%);
+  width:100%;
+  border-bottom:1px solid #2f3240;
 }
 
-.hero-icon{
+.content-wrap{
+  max-width:1100px;
+  margin:-56px auto 40px;
+  padding:0 26px;
+}
+
+.page-icon{
+  font-size:62px;
+  margin-bottom:8px;
   display:block;
-  font-size:44px;
-  margin-bottom:10px;
+  text-shadow:0 8px 18px rgba(0,0,0,0.35);
 }
 
-h1{
-  margin:0;
-  font-size:52px;
-  font-weight:800;
-  color:#ffffff;
-  letter-spacing:0.2px;
+.page-title{
+  font-size:50px;
+  font-weight:750;
+  letter-spacing:-0.6px;
+  margin-bottom:28px;
 }
+
+.section-container{
+  margin-bottom:28px;
+  background:linear-gradient(180deg, rgba(24, 30, 44, 0.8), rgba(16, 21, 33, 0.7));
+  border:1px solid #2a3245;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 14px 30px rgba(0,0,0,0.25);
+}
+
+.section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #333d54;
+  padding-bottom:10px;
+  margin-bottom:16px;
+  gap:10px;
+}
+
+.section-header h2{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+}
+
+.section-icons{
+  color:var(--muted);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.section-icons span{
+  width:24px;
+  height:24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.toolbar{display:flex;justify-content:flex-end;margin-bottom:14px;}
 
 /* Calendar */
 .calendar{
   background:#101622;
   border:1px solid #2a3140;
-  border-radius:8px;
-  margin-bottom:30px;
+  border-radius:10px;
   overflow:hidden;
 }
 
@@ -126,27 +192,27 @@ h1{
   padding:16px 18px;
   border-bottom:1px solid #2a3140;
   background:#0e1420;
+  gap:10px;
 }
 
 .cal-header button{
-  background:transparent;
-  border:1px solid #2a3140;
+  background:#222b3d;
+  border:1px solid #3a4761;
   color:#9fb2d0;
-  padding:5px 10px;
-  border-radius:5px;
+  padding:6px 10px;
+  border-radius:6px;
   cursor:pointer;
 }
 
 .cal-header h2{
   margin:0;
-  font-size:36px;
+  font-size:30px;
   color:#ffffff;
 }
 
 .cal-today-btn{
+  background:transparent !important;
   border:none !important;
-  color:#9fb2d0 !important;
-  padding:0 !important;
 }
 
 .cal-grid{
@@ -185,13 +251,9 @@ h1{
 
 .date-cell:hover{background:#121a28}
 .date-cell.empty-cell{cursor:default}
-.date-cell.active{
-  background:rgba(164,32,53,0.22);
-}
-.date-cell.active .day-number{
-  background:#ff4d62;
-  color:#fff;
-}
+.date-cell.active{background:rgba(164,32,53,0.22);}
+.date-cell.active .day-number{background:#ff4d62;color:#fff;}
+
 .day-number{
   min-width:24px;
   height:24px;
@@ -209,9 +271,11 @@ h1{
 .heat-4{background:#254c72}
 
 /* Table */
-table{width:100%;border-collapse:collapse;margin-bottom:20px}
-th,td{border:1px solid var(--border-color);padding:8px;text-align:center}
-th{background:rgba(255,255,255,0.03)}
+table{width:100%;border-collapse:collapse;margin-bottom:0}
+th,td{border:1px solid #32405a;padding:8px;text-align:center}
+th{background:#202b3f;color:#d6ddef}
+
+td{background:rgba(21,30,45,0.75);}
 
 .progress-bar{height:6px;background:#333;border-radius:5px;overflow:hidden}
 .progress-fill{height:100%;background:var(--notion-blue)}
@@ -230,37 +294,46 @@ button.small{
 .summary{
   display:flex;
   gap:30px;
-  margin-top:20px;
-  background:var(--card-bg);
+  margin-top:0;
+  background:linear-gradient(180deg, #1b2433, #151e2d);
   padding:15px;
-  border:1px solid var(--border-color);
-  border-radius:8px;
+  border:1px solid #32405a;
+  border-radius:10px;
 }
 
-canvas{
-  background:var(--card-bg);
-  padding:15px;
+.chart-card{
+  background:linear-gradient(180deg, #1b2433, #151e2d);
+  border:1px solid #32405a;
   border-radius:10px;
-  border:1px solid var(--border-color);
-  margin-top:20px;
+  padding:14px;
+}
+
+canvas{background:transparent;border:none;margin-top:0;width:100%;max-height:260px;}
+
+@media(max-width:1000px){
+  .sidebar{display:none;}
+  .content-wrap{margin-top:-48px;padding:0 14px 30px;}
+  .page-title{font-size:36px;}
+  .section-container{padding:14px;border-radius:14px;}
+  .cal-header h2{font-size:24px;}
 }
 </style>
 </head>
 
 <body>
-
+<div class="layout">
 <aside class="sidebar">
   <div class="nav-header">
     <a href="index.html" style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
       <span>🎓</span> <span>DIU Student Manager</span>
     </a>
   </div>
-  
+
   <h4>Navigation</h4>
   <ul class="menu">
     <li><a href="exams and study.html"><span class="icon">📚</span> Exams and Study</a></li>
     <li><a href="courses.html"><span class="icon">📕</span> Courses</a></li>
-    <li><a href="habit.html"><span class="icon">📅</span> Habit tracker</a></li>
+    <li><a href="habit.html" class="active"><span class="icon">📅</span> Habit tracker</a></li>
     <li><a href="hacking.html"><span class="icon" style="color:#ff4d8d">/&gt;</span> Hacking</a></li>
     <li><a href="goals.html"><span class="icon">🎯</span> Goals</a></li>
     <li><a href="planner.html"><span class="icon">🥪</span> Planner</a></li>
@@ -268,7 +341,7 @@ canvas{
     <li><a href="night.html"><span class="icon">🌚</span> Night Routine</a></li>
     <li><a href="allclasses.html"><span class="icon">田</span> All Classes</a></li>
     <li><a href="assignments.html"><span class="icon">田</span> Assignments</a></li>
-    <li><a href="friday.html"><span class="icon">団</span> View of Friday</a></li>
+    <li><a href="weekend.html"><span class="icon">🌙</span>Weekend</a></li>
   </ul>
   <div class="todo-box">
     <h4>To Do List:</h4>
@@ -284,34 +357,62 @@ canvas{
   </div>
 </aside>
 
-<div class="main">
+<div class="main-area">
+  <div class="hero-banner"></div>
 
-<div class="hero">
-  <span class="hero-icon">🗓️</span>
-  <h1>Habit tracker</h1>
+  <main class="content-wrap">
+    <span class="page-icon">🗓️</span>
+    <h1 class="page-title">Habit Tracker</h1>
+
+    <section class="section-container">
+      <div class="section-header">
+        <h2>Calendar Heatmap</h2>
+        <div class="section-icons"><span>≡</span><span>⌕</span></div>
+      </div>
+      <div class="calendar">
+        <div class="cal-header">
+          <button onclick="prevMonth()">←</button>
+          <h2 id="monthName"></h2>
+          <button onclick="nextMonth()">→</button>
+          <button class="cal-today-btn" onclick="goToday()">Today</button>
+        </div>
+        <div class="cal-grid" id="calendar"></div>
+      </div>
+    </section>
+
+    <section class="section-container">
+      <div class="section-header">
+        <h2>Weekly Habit Table</h2>
+        <div class="section-icons"><span>▦</span></div>
+      </div>
+      <div class="toolbar">
+        <button class="small" onclick="addHabit()">+ Add Habit</button>
+      </div>
+      <table id="habitTable"></table>
+    </section>
+
+    <section class="section-container">
+      <div class="section-header">
+        <h2>Summary</h2>
+        <div class="section-icons"><span>◔</span></div>
+      </div>
+      <div class="summary">
+        <div><strong>Monthly Completion:</strong> <span id="monthly">0%</span></div>
+        <div><strong>Streak:</strong> <span id="streak">0</span> days</div>
+      </div>
+    </section>
+
+    <section class="section-container">
+      <div class="section-header">
+        <h2>Last 7 Days</h2>
+        <div class="section-icons"><span>↗</span></div>
+      </div>
+      <div class="chart-card">
+        <canvas id="progressChart" height="100"></canvas>
+      </div>
+    </section>
+  </main>
 </div>
-
-<div class="calendar">
-  <div class="cal-header">
-    <button onclick="prevMonth()">←</button>
-    <h2 id="monthName"></h2>
-    <button onclick="nextMonth()">→</button>
-    <button class="cal-today-btn" onclick="goToday()">Today</button>
-  </div>
-  <div class="cal-grid" id="calendar"></div>
-</div>
-
-<button class="small" onclick="addHabit()">+ Add Habit</button>
-
-<table id="habitTable"></table>
-
-<div class="summary">
-  <div><strong>Monthly Completion:</strong> <span id="monthly">0%</span></div>
-  <div><strong>Streak:</strong> <span id="streak">0</span> days</div>
-</div>
-
-<canvas id="progressChart" height="100"></canvas>
-
 </div>
 
 <script>
@@ -457,7 +558,6 @@ function renderChart(){
     return;
   }
 
-  // Fallback renderer when Chart.js CDN is blocked/unavailable.
   const w = canvas.width;
   const h = canvas.height;
   const padding = 28;
