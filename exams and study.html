@@ -577,9 +577,9 @@ function deleteExam(classId, examIndex) {
 }
 
 function getStatusBadge(status) {
-  if (status === "pass") return '<span class="status-badge status-pass">? Pass</span>';
-  if (status === "notpass") return '<span class="status-badge status-notpass">? Not Pass</span>';
-  return '<span class="status-badge">? Upcoming</span>';
+  if (status === "pass") return '<span class="status-badge status-pass"> Pass</span>';
+  if (status === "notpass") return '<span class="status-badge status-notpass"> Not Pass</span>';
+  return '<span class="status-badge"> Upcoming</span>';
 }
 
 function renderExamSections() {
@@ -626,7 +626,7 @@ function renderExamSections() {
     const exams = examStore[cls.id] || [];
     const cards = exams.map((exam, examIndex) => `
       <div class="exam-card">
-        <div class="card-title">?? ${exam.title || "Exam"}</div>
+        <div class="card-title"> ${exam.title || "Exam"}</div>
         <p class="card-info"><strong>${cls.code}</strong></p>
         <p class="card-info">${exam.date || "Upcoming"}</p>
         <p class="card-info">${cls.schedule}</p>
