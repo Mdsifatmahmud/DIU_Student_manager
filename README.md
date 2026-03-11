@@ -9,7 +9,7 @@ Manage classes, assignments, study plans, habits, goals, and daily routines in o
 
 <p align="center">
 
-![HTML](https://github.com/Mdsifatmahmud/DIU_Student_manager/blob/main/index.html)
+<img src="https://github.com/Mdsifatmahmud/DIU_Student_manager/blob/main/web%20view.png" width="800"/>
 
 
 </p>
@@ -47,16 +47,16 @@ This project demonstrates practical **frontend dashboard development** and user-
 
 ## 🖼 Project Preview
 
+## 🎥 Project Preview
 
-Example:
+<p align="center">
+  <img src="https://github.com/Mdsifatmahmud/DIU_Student_manager/blob/main/web%20view.png" width="800"/>
+</p>
 
-```
-/assets/screenshots/dashboard.png
-```
+<p align="center">
+  <img src="https://github.com/Mdsifatmahmud/DIU_Student_manager/blob/main/courses.png" width="800"/>
+</p>
 
-```markdown
-![Dashboard Preview](assets/screenshots/dashboard.png)
-```
 
 ---
 
@@ -97,18 +97,12 @@ diu-student-manager
 
 ## 🚀 Getting Started
 
-### Clone the repository
-
-```bash
-git clone https://github.com/yourusername/diu-student-manager.git
-```
-
 ### Open the project
 
 Simply open:
 
 ```
-[index.html](https://github.com/Mdsifatmahmud/DIU_Student_manager/blob/main/index.html)
+https://mdsifatmahmud.github.io/DIU_Student_manager/
 ```
 
 
@@ -133,12 +127,9 @@ CSE Student
 Daffodil International University
 
 GitHub:
-[https://github.com/yourusername](https://github.com/Mdsifatmahmud)
+[Mdsifatmahmud](https://github.com/Mdsifatmahmud)
 
 ---
 
-## ⭐ Support
-
-If you find this project helpful, consider giving it a **star ⭐** on GitHub.
 
 
