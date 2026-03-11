@@ -45,8 +45,6 @@ This project demonstrates practical **frontend dashboard development** and user-
 
 ---
 
-## 🖼 Project Preview
-
 ## 🎥 Project Preview
 
 <p align="center">
